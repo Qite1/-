@@ -1,0 +1,523 @@
+{
+  "users": [
+    {
+      "id": "689cdc42-f5da-4364-9d15-8ee6ca491470",
+      "username": "admin",
+      "passwordHash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+      "name": "系统管理员",
+      "role": "admin",
+      "project": "示例枢纽工程",
+      "createdAt": "2026-10-22T02:09:02.869Z",
+      "updatedAt": "2026-10-22T02:09:02.869Z"
+    },
+    {
+      "id": "6d0d70a9-4a02-4942-a50e-3e754badae46",
+      "username": "reviewer",
+      "passwordHash": "7ad8ef4141484d807e3b171c42f49110f799cfe5ab79b01cbce28387603f806f",
+      "name": "张审核",
+      "role": "reviewer",
+      "project": "示例枢纽工程",
+      "createdAt": "2026-10-22T02:09:02.870Z",
+      "updatedAt": "2026-10-22T02:09:02.870Z"
+    },
+    {
+      "id": "b06ae95d-9e75-44e4-be01-ecc871b351c0",
+      "username": "worker",
+      "passwordHash": "312bba6ac1c4274943d7d3c1f346e8e27310c731e407ce5592d82f0d101fbff1",
+      "name": "李施工",
+      "role": "worker",
+      "project": "示例枢纽工程",
+      "createdAt": "2026-10-22T02:09:02.870Z",
+      "updatedAt": "2026-10-22T02:09:02.870Z"
+    }
+  ],
+  "inspections": [
+    {
+      "code": "WQ20261022-045B",
+      "uploaderId": "689cdc42-f5da-4364-9d15-8ee6ca491470",
+      "uploader": "系统管理员",
+      "uploaderRole": "admin",
+      "uploaderRoleName": "管理员",
+      "project": "示例枢纽工程",
+      "photos": [
+        {
+          "fname": "ac2706ff5d33828331fad0b1ee959d4f.jpg",
+          "path": "/uploads/ac2706ff5d33828331fad0b1ee959d4f.jpg"
+        }
+      ],
+      "photoAnalysis": [
+        {
+          "fname": "ac2706ff5d33828331fad0b1ee959d4f.jpg",
+          "path": "/uploads/ac2706ff5d33828331fad0b1ee959d4f.jpg",
+          "decodeStatus": "vision-ok",
+          "features": null,
+          "findings": [
+            {
+              "type": "安全",
+              "category": "综合",
+              "risk": "提示",
+              "description": "图片无法解析，无法从画面客观识别人员防护、临边洞口、脚手架、施工用电、文明施工及混凝土质量等具体隐患。",
+              "regulation": "现场复核",
+              "rectification": "由安全员/施工员按SL 398-2007、SL 714-2015、SL 721-2015、SL 677-2014、JGJ 130-2011等规范进行现场核查，并留存影像记录。",
+              "uncertain": true,
+              "confirmNote": "AI未识别到明确隐患并非代表现场无隐患，需人工复核：临边防护高度及挡脚板、人员安全帽/安全带佩戴、脚手架脚手板满铺与连墙件、三级配电两级保护、临水救生器材、混凝土养护与钢筋连接质量等。",
+              "photo": "ac2706ff5d33828331fad0b1ee959d4f.jpg",
+              "source": "pixel",
+              "photos": [
+                "ac2706ff5d33828331fad0b1ee959d4f.jpg"
+              ]
+            }
+          ],
+          "engine": "vision-api"
+        }
+      ],
+      "photoCount": 1,
+      "findings": [
+        {
+          "type": "安全",
+          "category": "综合",
+          "risk": "提示",
+          "description": "图片无法解析，无法从画面客观识别人员防护、临边洞口、脚手架、施工用电、文明施工及混凝土质量等具体隐患。",
+          "regulation": "现场复核",
+          "rectification": "由安全员/施工员按SL 398-2007、SL 714-2015、SL 721-2015、SL 677-2014、JGJ 130-2011等规范进行现场核查，并留存影像记录。",
+          "uncertain": true,
+          "confirmNote": "AI未识别到明确隐患并非代表现场无隐患，需人工复核：临边防护高度及挡脚板、人员安全帽/安全带佩戴、脚手架脚手板满铺与连墙件、三级配电两级保护、临水救生器材、混凝土养护与钢筋连接质量等。",
+          "photo": "ac2706ff5d33828331fad0b1ee959d4f.jpg",
+          "source": "pixel",
+          "photos": [
+            "ac2706ff5d33828331fad0b1ee959d4f.jpg"
+          ]
+        }
+      ],
+      "topRisk": "提示",
+      "hints": "",
+      "status": "confirmed",
+      "statusText": "已确认并生成台账",
+      "submittedAt": "2026-10-22T02:57:38.266Z",
+      "id": "0d5c73fb-5291-40e2-8401-15e0bc622e69",
+      "createdAt": "2026-10-22T02:57:38.268Z",
+      "reviewerId": "6d0d70a9-4a02-4942-a50e-3e754badae46",
+      "reviewerName": "张审核",
+      "reviewerComment": "确认无误，同意生成整改台账，请限期整改并反馈闭环。",
+      "confirmedAt": "2026-10-22T03:00:21.824Z",
+      "updatedAt": "2026-10-22T03:00:21.825Z"
+    },
+    {
+      "code": "WQ20261022-6328",
+      "uploaderId": "689cdc42-f5da-4364-9d15-8ee6ca491470",
+      "uploader": "系统管理员",
+      "uploaderRole": "admin",
+      "uploaderRoleName": "管理员",
+      "project": "示例枢纽工程",
+      "photos": [
+        {
+          "fname": "b17b1586b6f496d7f722c80a2de29f2a.jpg",
+          "path": "/uploads/b17b1586b6f496d7f722c80a2de29f2a.jpg"
+        }
+      ],
+      "photoAnalysis": [
+        {
+          "fname": "b17b1586b6f496d7f722c80a2de29f2a.jpg",
+          "path": "/uploads/b17b1586b6f496d7f722c80a2de29f2a.jpg",
+          "decodeStatus": "vision-ok",
+          "features": null,
+          "findings": [
+            {
+              "type": "安全",
+              "category": "综合",
+              "risk": "提示",
+              "description": "未发现明显隐患，建议结合现场规范抽查确认",
+              "regulation": "现场复核",
+              "rectification": "由安全员/施工员按规范现场抽查",
+              "uncertain": true,
+              "confirmNote": "AI未识别到明确隐患，现场人工复核",
+              "photo": "b17b1586b6f496d7f722c80a2de29f2a.jpg",
+              "source": "pixel",
+              "photos": [
+                "b17b1586b6f496d7f722c80a2de29f2a.jpg"
+              ]
+            }
+          ],
+          "engine": "vision-api"
+        }
+      ],
+      "photoCount": 1,
+      "findings": [
+        {
+          "type": "安全",
+          "category": "综合",
+          "risk": "提示",
+          "description": "未发现明显隐患，建议结合现场规范抽查确认",
+          "regulation": "现场复核",
+          "rectification": "由安全员/施工员按规范现场抽查",
+          "uncertain": true,
+          "confirmNote": "AI未识别到明确隐患，现场人工复核",
+          "photo": "b17b1586b6f496d7f722c80a2de29f2a.jpg",
+          "source": "pixel",
+          "photos": [
+            "b17b1586b6f496d7f722c80a2de29f2a.jpg"
+          ]
+        }
+      ],
+      "topRisk": "提示",
+      "hints": "",
+      "status": "confirmed",
+      "statusText": "已确认并生成台账",
+      "submittedAt": "2026-10-22T02:57:04.638Z",
+      "id": "b4d92b38-f390-49e7-aeed-ee09bfa3ac74",
+      "createdAt": "2026-10-22T02:57:04.639Z",
+      "reviewerId": "6d0d70a9-4a02-4942-a50e-3e754badae46",
+      "reviewerName": "张审核",
+      "reviewerComment": "确认无误，同意生成整改台账，请限期整改并反馈闭环。",
+      "confirmedAt": "2026-10-22T03:00:23.284Z",
+      "updatedAt": "2026-10-22T03:00:23.286Z"
+    },
+    {
+      "code": "WQ20261022-F1B9",
+      "uploaderId": "689cdc42-f5da-4364-9d15-8ee6ca491470",
+      "uploader": "系统管理员",
+      "uploaderRole": "admin",
+      "uploaderRoleName": "管理员",
+      "project": "示例枢纽工程",
+      "photos": [
+        {
+          "fname": "b17b1586b6f496d7f722c80a2de29f2a.jpg",
+          "path": "/uploads/b17b1586b6f496d7f722c80a2de29f2a.jpg"
+        }
+      ],
+      "photoAnalysis": [
+        {
+          "fname": "b17b1586b6f496d7f722c80a2de29f2a.jpg",
+          "path": "/uploads/b17b1586b6f496d7f722c80a2de29f2a.jpg",
+          "decodeStatus": "error-fallback",
+          "features": null,
+          "findings": [
+            {
+              "type": "系统",
+              "category": "AI接口异常·已回退本地识别",
+              "risk": "提示",
+              "description": "AI 视觉接口调用失败（Insufficient Balance (request_id: d842f74e-dfed-4fd9-ae12-21fd03554ce0)），已自动回退到本地像素规则引擎进行识别，以下结论供参考。",
+              "regulation": "—",
+              "rectification": "请检查 ai-config.json 中的 API Key / 模型配置与账户余额；当前结果可先用现场人工复核。",
+              "uncertain": true,
+              "confirmNote": "AI 接口异常，以下为本地引擎兜底结果，请现场核实。",
+              "source": "system",
+              "photo": "b17b1586b6f496d7f722c80a2de29f2a.jpg",
+              "photos": [
+                "b17b1586b6f496d7f722c80a2de29f2a.jpg"
+              ]
+            }
+          ],
+          "engine": "vision-api-error-fallback"
+        }
+      ],
+      "photoCount": 1,
+      "findings": [
+        {
+          "type": "系统",
+          "category": "AI接口异常·已回退本地识别",
+          "risk": "提示",
+          "description": "AI 视觉接口调用失败（Insufficient Balance (request_id: d842f74e-dfed-4fd9-ae12-21fd03554ce0)），已自动回退到本地像素规则引擎进行识别，以下结论供参考。",
+          "regulation": "—",
+          "rectification": "请检查 ai-config.json 中的 API Key / 模型配置与账户余额；当前结果可先用现场人工复核。",
+          "uncertain": true,
+          "confirmNote": "AI 接口异常，以下为本地引擎兜底结果，请现场核实。",
+          "source": "system",
+          "photo": "b17b1586b6f496d7f722c80a2de29f2a.jpg",
+          "photos": [
+            "b17b1586b6f496d7f722c80a2de29f2a.jpg"
+          ]
+        }
+      ],
+      "topRisk": "提示",
+      "hints": "",
+      "status": "submitted",
+      "statusText": "已递交待审核",
+      "submittedAt": "2026-10-22T02:56:14.795Z",
+      "id": "9d841eb3-76f2-456b-8c53-b795b53155a3",
+      "createdAt": "2026-10-22T02:56:14.798Z",
+      "reviewerId": null,
+      "reviewerName": null,
+      "reviewerComment": null,
+      "confirmedAt": null,
+      "updatedAt": "2026-10-22T03:00:44.746Z"
+    },
+    {
+      "code": "WQ20261022-0726",
+      "uploaderId": "b06ae95d-9e75-44e4-be01-ecc871b351c0",
+      "uploader": "李施工",
+      "uploaderRole": "worker",
+      "uploaderRoleName": "施工员",
+      "project": "测试项目",
+      "photos": [
+        {
+          "fname": "test.png",
+          "path": "/uploads/test.png"
+        }
+      ],
+      "photoAnalysis": [
+        {
+          "fname": "test.png",
+          "path": "/uploads/test.png",
+          "decodeStatus": "error-fallback",
+          "features": null,
+          "findings": [
+            {
+              "type": "系统",
+              "category": "AI接口异常·已回退本地识别",
+              "risk": "提示",
+              "description": "AI 视觉接口调用失败（Insufficient Balance (request_id: 992b18e5-6ae7-4573-81c8-fcc8a785d227)），已自动回退到本地像素规则引擎进行识别，以下结论供参考。",
+              "regulation": "—",
+              "rectification": "请检查 ai-config.json 中的 API Key / 模型配置与账户余额；当前结果可先用现场人工复核。",
+              "uncertain": true,
+              "confirmNote": "AI 接口异常，以下为本地引擎兜底结果，请现场核实。",
+              "source": "system",
+              "photo": "test.png",
+              "photos": [
+                "test.png"
+              ]
+            },
+            {
+              "id": "PPE-helmet",
+              "photo": "test.png",
+              "type": "安全",
+              "risk": "较大",
+              "category": "个人防护",
+              "description": "人员未佩戴安全帽或未系紧帽带",
+              "regulation": "《水利水电工程施工安全管理导则》SL 721-2015；《水利水电工程施工通用安全技术规程》SL 398-2007",
+              "rectification": "立即要求人员佩戴并系紧安全帽，加强入场安全教育",
+              "uncertain": false,
+              "source": "rule",
+              "photos": [
+                "test.png"
+              ]
+            }
+          ],
+          "engine": "vision-api-error-fallback"
+        }
+      ],
+      "photoCount": 1,
+      "findings": [
+        {
+          "type": "系统",
+          "category": "AI接口异常·已回退本地识别",
+          "risk": "提示",
+          "description": "AI 视觉接口调用失败（Insufficient Balance (request_id: 992b18e5-6ae7-4573-81c8-fcc8a785d227)），已自动回退到本地像素规则引擎进行识别，以下结论供参考。",
+          "regulation": "—",
+          "rectification": "请检查 ai-config.json 中的 API Key / 模型配置与账户余额；当前结果可先用现场人工复核。",
+          "uncertain": true,
+          "confirmNote": "AI 接口异常，以下为本地引擎兜底结果，请现场核实。",
+          "source": "system",
+          "photo": "test.png",
+          "photos": [
+            "test.png"
+          ]
+        },
+        {
+          "id": "PPE-helmet",
+          "photo": "test.png",
+          "type": "安全",
+          "risk": "较大",
+          "category": "个人防护",
+          "description": "人员未佩戴安全帽或未系紧帽带",
+          "regulation": "《水利水电工程施工安全管理导则》SL 721-2015；《水利水电工程施工通用安全技术规程》SL 398-2007",
+          "rectification": "立即要求人员佩戴并系紧安全帽，加强入场安全教育",
+          "uncertain": false,
+          "source": "rule",
+          "photos": [
+            "test.png"
+          ]
+        }
+      ],
+      "topRisk": "较大",
+      "hints": "基坑临边缺少防护栏杆 人员未佩戴安全帽",
+      "status": "submitted",
+      "statusText": "已递交待审核",
+      "submittedAt": "2026-10-22T02:40:47.714Z",
+      "id": "58b7f4eb-8953-4f17-a954-f94a65cbd88b",
+      "createdAt": "2026-10-22T02:40:47.715Z",
+      "reviewerId": null,
+      "reviewerName": null,
+      "reviewerComment": null,
+      "confirmedAt": null,
+      "updatedAt": "2026-10-22T03:00:51.087Z"
+    },
+    {
+      "code": "WQ20261022-4130",
+      "uploaderId": "b06ae95d-9e75-44e4-be01-ecc871b351c0",
+      "uploader": "李施工",
+      "uploaderRole": "worker",
+      "uploaderRoleName": "施工员",
+      "project": "测试项目",
+      "photos": [
+        {
+          "fname": "test.png",
+          "path": "/uploads/test.png"
+        }
+      ],
+      "photoAnalysis": [
+        {
+          "fname": "test.png",
+          "path": "/uploads/test.png",
+          "decodeStatus": "local-engine",
+          "features": null,
+          "findings": [
+            {
+              "id": "PPE-helmet",
+              "photo": "test.png",
+              "type": "安全",
+              "risk": "较大",
+              "category": "个人防护",
+              "description": "人员未佩戴安全帽或未系紧帽带",
+              "regulation": "《水利水电工程施工安全管理导则》SL 721-2015；《水利水电工程施工通用安全技术规程》SL 398-2007",
+              "rectification": "立即要求人员佩戴并系紧安全帽，加强入场安全教育",
+              "uncertain": false,
+              "source": "rule",
+              "photos": [
+                "test.png"
+              ]
+            }
+          ],
+          "engine": "local-engine"
+        }
+      ],
+      "photoCount": 1,
+      "findings": [
+        {
+          "id": "PPE-helmet",
+          "photo": "test.png",
+          "type": "安全",
+          "risk": "较大",
+          "category": "个人防护",
+          "description": "人员未佩戴安全帽或未系紧帽带",
+          "regulation": "《水利水电工程施工安全管理导则》SL 721-2015；《水利水电工程施工通用安全技术规程》SL 398-2007",
+          "rectification": "立即要求人员佩戴并系紧安全帽，加强入场安全教育",
+          "uncertain": false,
+          "source": "rule",
+          "photos": [
+            "test.png"
+          ]
+        }
+      ],
+      "topRisk": "较大",
+      "hints": "基坑临边缺少防护栏杆 人员未佩戴安全帽",
+      "status": "confirmed",
+      "statusText": "已确认并生成台账",
+      "submittedAt": "2026-10-22T02:32:20.457Z",
+      "id": "49054a98-3d4a-4a2c-92d3-3f9fe05ffa0c",
+      "createdAt": "2026-10-22T02:32:20.460Z",
+      "reviewerId": "689cdc42-f5da-4364-9d15-8ee6ca491470",
+      "reviewerName": "系统管理员",
+      "reviewerComment": "确认无误，同意生成整改台账，请限期整改并反馈闭环。",
+      "confirmedAt": "2026-10-22T02:59:09.376Z",
+      "updatedAt": "2026-10-22T02:59:09.378Z"
+    }
+  ],
+  "ledgers": [
+    {
+      "code": "WQ20261022-6328-T",
+      "inspectionId": "b4d92b38-f390-49e7-aeed-ee09bfa3ac74",
+      "inspectionCode": "WQ20261022-6328",
+      "workerId": "689cdc42-f5da-4364-9d15-8ee6ca491470",
+      "workerName": "系统管理员",
+      "reviewerId": "6d0d70a9-4a02-4942-a50e-3e754badae46",
+      "reviewerName": "张审核",
+      "project": "示例枢纽工程",
+      "findings": [
+        {
+          "type": "安全",
+          "category": "综合",
+          "risk": "提示",
+          "description": "未发现明显隐患，建议结合现场规范抽查确认",
+          "regulation": "现场复核",
+          "rectification": "由安全员/施工员按规范现场抽查",
+          "uncertain": true,
+          "confirmNote": "AI未识别到明确隐患，现场人工复核",
+          "photo": "b17b1586b6f496d7f722c80a2de29f2a.jpg",
+          "source": "pixel",
+          "photos": [
+            "b17b1586b6f496d7f722c80a2de29f2a.jpg"
+          ]
+        }
+      ],
+      "topRisk": "提示",
+      "status": "pending",
+      "statusText": "待落实整改",
+      "remark": "确认无误，同意生成整改台账，请限期整改并反馈闭环。",
+      "confirmedAt": "2026-10-22T03:00:23.287Z",
+      "id": "d92c483b-c82e-422d-8803-aa9628188877",
+      "createdAt": "2026-10-22T03:00:23.288Z"
+    },
+    {
+      "code": "WQ20261022-045B-T",
+      "inspectionId": "0d5c73fb-5291-40e2-8401-15e0bc622e69",
+      "inspectionCode": "WQ20261022-045B",
+      "workerId": "689cdc42-f5da-4364-9d15-8ee6ca491470",
+      "workerName": "系统管理员",
+      "reviewerId": "6d0d70a9-4a02-4942-a50e-3e754badae46",
+      "reviewerName": "张审核",
+      "project": "示例枢纽工程",
+      "findings": [
+        {
+          "type": "安全",
+          "category": "综合",
+          "risk": "提示",
+          "description": "图片无法解析，无法从画面客观识别人员防护、临边洞口、脚手架、施工用电、文明施工及混凝土质量等具体隐患。",
+          "regulation": "现场复核",
+          "rectification": "由安全员/施工员按SL 398-2007、SL 714-2015、SL 721-2015、SL 677-2014、JGJ 130-2011等规范进行现场核查，并留存影像记录。",
+          "uncertain": true,
+          "confirmNote": "AI未识别到明确隐患并非代表现场无隐患，需人工复核：临边防护高度及挡脚板、人员安全帽/安全带佩戴、脚手架脚手板满铺与连墙件、三级配电两级保护、临水救生器材、混凝土养护与钢筋连接质量等。",
+          "photo": "ac2706ff5d33828331fad0b1ee959d4f.jpg",
+          "source": "pixel",
+          "photos": [
+            "ac2706ff5d33828331fad0b1ee959d4f.jpg"
+          ]
+        }
+      ],
+      "topRisk": "提示",
+      "status": "pending",
+      "statusText": "待落实整改",
+      "remark": "确认无误，同意生成整改台账，请限期整改并反馈闭环。",
+      "confirmedAt": "2026-10-22T03:00:21.828Z",
+      "id": "e61747a0-b716-403d-aaa0-9c53467370af",
+      "createdAt": "2026-10-22T03:00:21.829Z"
+    },
+    {
+      "code": "WQ20261022-4130-T",
+      "inspectionId": "49054a98-3d4a-4a2c-92d3-3f9fe05ffa0c",
+      "inspectionCode": "WQ20261022-4130",
+      "workerId": "b06ae95d-9e75-44e4-be01-ecc871b351c0",
+      "workerName": "李施工",
+      "reviewerId": "689cdc42-f5da-4364-9d15-8ee6ca491470",
+      "reviewerName": "系统管理员",
+      "project": "测试项目",
+      "findings": [
+        {
+          "id": "PPE-helmet",
+          "photo": "test.png",
+          "type": "安全",
+          "risk": "较大",
+          "category": "个人防护",
+          "description": "人员未佩戴安全帽或未系紧帽带",
+          "regulation": "《水利水电工程施工安全管理导则》SL 721-2015；《水利水电工程施工通用安全技术规程》SL 398-2007",
+          "rectification": "立即要求人员佩戴并系紧安全帽，加强入场安全教育",
+          "uncertain": false,
+          "source": "rule",
+          "photos": [
+            "test.png"
+          ]
+        }
+      ],
+      "topRisk": "较大",
+      "status": "closed",
+      "statusText": "已闭环销号",
+      "remark": "确认无误，同意生成整改台账，请限期整改并反馈闭环。",
+      "confirmedAt": "2026-10-22T02:59:09.380Z",
+      "id": "dd92ad66-f6f3-441f-b977-c901dbfb820a",
+      "createdAt": "2026-10-22T02:59:09.381Z",
+      "updatedAt": "2026-10-22T03:00:04.538Z",
+      "rectificationNote": "现场复核确认整改到位，予以销号。",
+      "rectifiedAt": "2026-10-22T02:59:36.096Z"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>水利工程质量安全合规管理助手</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <!-- 登录页 -->
+  <div id="loginPage" class="login-page">
+    <div class="water-overlay"></div>
+    <div class="login-card glass">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="assets/logo.svg" alt="水纹标志" width="72" height="72">
+        </div>
+        <h1>水利工程质量安全</h1>
+        <h2>合规管理助手</h2>
+        <p class="brand-sub">WATER ENGINEERING SAFETY COMPLIANCE ASSISTANT</p>
+      </div>
+      <form id="loginForm" autocomplete="off">
+        <div class="field">
+          <label for="loginUser">账号</label>
+          <input id="loginUser" type="text" placeholder="请输入账号" required>
+        </div>
+        <div class="field">
+          <label for="loginPass">密码</label>
+          <input id="loginPass" type="password" placeholder="请输入密码" required>
+        </div>
+        <p id="loginError" class="login-error"></p>
+        <button type="submit" class="btn btn-primary btn-block">
+          <span class="btn-waves"></span> 登 录
+        </button>
+      </form>
+      <div class="login-tip">
+        演示账号见右侧 · 管理员 admin/admin123 · 审核员 reviewer/review123 · 施工员 worker/worker123
+      </div>
+    </div>
+  </div>
+
+  <!-- 主应用 -->
+  <div id="appPage" class="app-page hidden">
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <img src="assets/logo.svg" alt="logo" width="34" height="34">
+        <span class="app-title">水利工程质量安全合规管理助手</span>
+        <span class="app-en">WaterSafety</span>
+      </div>
+      <div class="topbar-right">
+        <span class="user-chip">
+          <span class="role-badge" id="topRoleBadge">施工员</span>
+          <span id="topUserName">—</span>
+        </span>
+        <button class="btn btn-ghost" id="logoutBtn">退出登录</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <!-- 侧边导航 -->
+      <nav class="sidebar">
+        <button class="nav-item active" data-view="dashboard"><span class="nav-ico">◢</span> 工作台</button>
+        <button class="nav-item" data-view="upload"><span class="nav-ico">▲</span> <span id="navUploadText">现场巡检上报</span></button>
+        <button class="nav-item" data-view="inspections"><span class="nav-ico">▤</span> 审核单管理</button>
+        <button class="nav-item" data-view="ledgers"><span class="nav-ico">☷</span> 整改台账</button>
+        <button class="nav-item" data-view="regulations"><span class="nav-ico">≣</span> 规范查询</button>
+        <button class="nav-item admin-only" data-view="settings"><span class="nav-ico">⚙</span> AI 接口设置</button>
+        <button class="nav-item admin-only" data-view="users"><span class="nav-ico">⚙</span> 用户与权限</button>
+        <div class="sidebar-foot">当前项目<br><b id="footProject">—</b></div>
+      </nav>
+
+      <!-- 内容区 -->
+      <main class="content">
+        <!-- 工作台 -->
+        <section id="view-dashboard" class="view"></section>
+        <!-- 上传巡检 -->
+        <section id="view-upload" class="view hidden"></section>
+        <!-- 审核单 -->
+        <section id="view-inspections" class="view hidden"></section>
+        <!-- 台账 -->
+        <section id="view-ledgers" class="view hidden"></section>
+        <!-- 规范查询 -->
+        <section id="view-regulations" class="view hidden"></section>
+        <!-- AI 接口设置 -->
+        <section id="view-settings" class="view hidden"></section>
+        <!-- 用户管理 -->
+        <section id="view-users" class="view hidden"></section>
+      </main>
+    </div>
+
+    <!-- 模态 -->
+    <div id="modalRoot"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
