@@ -72,27 +72,34 @@ Quality · Safety · Compliance
 | 层 | 技术 |
 | --- | --- |
 | 前端 | 原生 HTML / CSS / JS 单页应用，无构建、无框架依赖 |
-| 后端 | Node.js（内置 `http / https / fs / crypto`），**零第三方依赖** |
-| 数据 | JSON 文件持久化（`backend/server/data/`） |
-| 认证 | Bearer Token 会话 |
-| AI | DeepSeek 多模态 / 对话 / 联网检索（OpenAI 兼容接口） |
+| 数据 | 浏览器 `localStorage`（静态模式，开箱即用）；可选 Node 后端 JSON 文件持久化（`backend/server/data/`） |
+| 认证 | 前端本地密钥校验（静态模式）；可选后端 Bearer Token 会话 |
+| AI | DeepSeek 多模态 / 对话 / 联网检索（OpenAI 兼容接口），密钥由用户在前端「AI 接口」页自行配置 |
+| 后端（可选） | Node.js（内置 `http / https / fs / crypto`），**零第三方依赖** |
+
+> 💡 **运行模式说明**：本项目前端为**自包含的纯静态应用**，数据存于浏览器并内置演示账号，因此可以直接部署到 **GitHub Pages** 等静态站点并登录使用。`backend/` 目录提供一套可选的 Node 后端（REST API + 服务端持久化），供需要多人共享、跨设备同步数据时使用。二者互不影响。
 
 ## ▶️ 快速开始
+
+### 方式一：静态/ GitHub Pages（推荐，零配置）
+
+直接把整个仓库发布到任意静态托管（**GitHub Pages / Nginx / Vercel / Netlify** 等），打开 `index.html` 即可：
+
+- 数据保存在**浏览器本地**，内置演示账号可直接登录。
+- **AI 识别 / AI 助手**需登录管理员在「AI 接口」页填入自己的 **DeepSeek API Key**；未配置时自动回退本地规则识别，不影响演示。
+- 部署到 GitHub Pages 时无需任何后端配置，登录可正常使用。
+
+### 方式二：Node 后端（多人共享数据）
 
 环境要求：**Node.js ≥ 16**（无需安装任何依赖）。
 
 ```bash
-# 1) 克隆后进入仓库根目录
-cd water-quality-safety
-
-# 2) 启动（默认端口 8123，可用 PORT 环境变量覆盖）
+# 在仓库根目录
 node backend/server/server.js
-# 或 npm start
+# 或 npm start        （默认端口 8123，可 PORT 覆盖）
 ```
 
-浏览器访问 **http://127.0.0.1:8123/** ，用上面的演示账号登录即可体验完整闭环。
-
-> 首次启动会自动在 `backend/server/data/` 生成数据并播种演示账号。
+浏览器访问 **http://127.0.0.1:8123/** ，用演示账号登录。首次启动会自动在 `backend/server/data/` 生成数据并播种演示账号。
 
 ### 自测
 
@@ -110,13 +117,13 @@ water-quality-safety/
 ├─ frontend/               前端静态资源（由后端托管）
 │  ├─ css/style.css        天蓝色水利风格样式
 │  └─ js/
-│     ├─ store.js          数据层（调用后端 REST API，内存缓存 + 异步持久化）
+│     ├─ store.js          数据层（localStorage 持久化，内置演示账号，静态模式）
 │     ├─ regulations.js    水利工程规范与权威链接数据
-│     ├─ ai.js             AI 接口层（经后端代理 DeepSeek）
+│     ├─ ai.js             AI 接口层（直接调用 DeepSeek，含本地规则回退）
 │     ├─ md.js             轻量 Markdown 渲染器
 │     └─ app.js            主逻辑（登录 / 上传 / 审核 / 台账 / 权限 / 规范 / AI）
 ├─ backend/
-│  └─ server/              后端（零依赖 Node 服务，详见 backend/server/README.md）
+│  └─ server/              可选后端（零依赖 Node 服务，详见 backend/server/README.md）
 │     ├─ server.js         HTTP 入口：路由 / 静态托管 / AI 代理 / SSE
 │     ├─ db.js             数据存储层（JSON 文件持久化）
 │     ├─ auth.js           认证与权限（token 会话 / 角色元数据）
@@ -138,7 +145,7 @@ water-quality-safety/
 - **照片隐患识别**：DeepSeek 多模态模型 `deepseek-flash`，以 Base64 内嵌于 user 消息，依据水利安全质量规范输出 JSON（隐患标题 / 风险等级 / 规范条款 / 整改措施 / 是否需现场核实）。
 - **AI 助手**：多轮对话 + 流式 SSE 输出 + 台账数据上下文 + 规范联网检索。
 - **离线兜底**：未配置密钥或接口异常时自动回退**本地规则识别**，保证完整闭环演示。
-- **密钥安全**：API Key 仅配置并保存在服务端，前端不触达密钥。
+- **密钥处理**：静态模式（GitHub Pages）下 API Key 由使用者在「AI 接口」页填入并保存在浏览器本地；使用可选 Node 后端时，密钥仅在服务器端保存。
 
 ## 🔌 REST API
 
@@ -157,15 +164,25 @@ water-quality-safety/
 
 ## ☁️ 部署发布
 
-本系统包含 Node 后端，以**进程**方式运行，不能作为纯静态站直接托管：
+### 静态托管（GitHub Pages 等）✅ 可直接使用
+
+本系统前端为**自包含纯静态应用**，可直接发布到 **GitHub Pages / Nginx / Vercel / Netlify** 等任意静态站点，**登录可正常使用**：
+
+1. 将仓库整体推送到 GitHub。
+2. 在仓库 **Settings → Pages**，选择分支的根目录作为发布源（也可沿用你当前 `qite1/-` 的 Pages 地址）。
+3. 打开生成的页面即可；数据存于各浏览器本地，演示账号直接可登录。
+
+> 说明：静态模式为单机（每台浏览器各自保存数据）。若多人共享数据，请改用下面的后端方式。
+
+### 进程托管（多人共享数据）
+
+使用可选 Node 后端，以**进程**方式运行（Node ≥ 16，零依赖）：
 
 ```bash
 node backend/server/server.js        # 默认 8123 端口
 ```
 
-可使用 `nohup`、**PM2**、**systemd** 或 **supervisor** 任一种进程守护方式常驻运行。如需独立保存数据，请一并备份 / 迁移 `backend/server/data/` 目录。
-
-> 若部署在非 8123 端口，需在页面加载前设置 `window.WM_API_BASE = 'http://<域名>:<端口>/api'`（前端默认同源 `/api`，通常无需设置）。
+可使用 `nohup`、**PM2**、**systemd** 或 **supervisor** 任一种作为进程守护常驻。如需独立保存数据，请一并备份 / 迁移 `backend/server/data/` 目录。非 8123 端口时需设置 `window.WM_API_BASE = 'http://<域名>:<端口>/api'`（仅后端模式下前端才会调用 `/api`）。
 
 ## 📄 许可协议
 

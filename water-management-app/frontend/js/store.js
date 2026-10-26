@@ -1,267 +1,138 @@
-/* ============================================================
- * 数据层：后端 REST API 桥接（替代原 localStorage）
- *
- * 本文件为前端提供与旧版一致的同步 Store 接口，但底层改为调用后端
- * server/server.js 提供的 /api/* REST 接口：
- *   - init()            初始化：恢复会话 + 从服务端拉取全量数据到内存缓存
- *   - login/logout      登录 / 退出
- *   - users/issues      用户 / 问题台账增删改查
- *   - aiConfig          AI 接口参数读写
- *   - chatHistory       AI 助手对话历史
- *
- * 策略：内存缓存保证渲染同步顺畅；所有写操作在更新缓存的同时异步持久化
- * 到后端。后端不可达时登录/初始化会给出明确提示，仍可离线部分使用。
- * ============================================================ */
-
-/* 后端 API 基址：默认同源 /api；如需跨源可在 window.WM_API_BASE 指定 */
-const WM_API_BASE = (typeof window !== 'undefined' && window.WM_API_BASE)
-  ? window.WM_API_BASE.replace(/\/+$/, '')
-  : '/api';
-
-/* 会话 token 持久化键（原 localStorage wm_session 语义） */
-const WM_TOKEN_KEY = 'wm_session_token';
+/* ============ 数据层：localStorage 持久化 ============
+ * 纯前端自包含版本，可在 GitHub Pages 等静态站点直接运行。
+ * 数据保存在浏览器本地（localStorage），包含演示账号种子。
+ * 同时兼容 app.js 调用的 init/login/logout/transitionIssue 接口。 */
 
 const Store = (() => {
-  /* ---------------- 内存缓存 ---------------- */
-  const cache = {
-    users: [],
-    issues: [],
-    chatHistory: [],
-    aiConfig: null,     // {baseUrl,model,apiKey,thinking} 仅本地需用的参数
-    token: null,
-    currentUser: null,
-    online: true
-  };
+  const USERS_KEY = 'wm_users';
+  const ISSUES_KEY = 'wm_issues';
+  const AI_KEY = 'wm_ai_config';
+  const SESSION_KEY = 'wm_session';
+  const CHAT_KEY = 'wm_chat_history';
+  const CHAT_MAX = 60;
 
   const uid = () => 'id_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
 
   const hasLS = () => (typeof localStorage !== 'undefined');
+  const read = (key, fallback) => {
+    try { const v = hasLS() ? localStorage.getItem(key) : null; return v ? JSON.parse(v) : fallback; }
+    catch (e) { return fallback; }
+  };
+  const write = (key, val) => { if (hasLS()) localStorage.setItem(key, JSON.stringify(val)); };
 
-  /* 读取本地持久化的 token */
-  function loadToken() {
-    try {
-      const t = hasLS() ? localStorage.getItem(WM_TOKEN_KEY) : null;
-      cache.token = t || null;
-    } catch (e) { cache.token = null; }
-    return cache.token;
-  }
-  function saveToken(t) {
-    cache.token = t || null;
-    try {
-      if (hasLS()) {
-        if (t) localStorage.setItem(WM_TOKEN_KEY, t); else localStorage.removeItem(WM_TOKEN_KEY);
-      }
-    } catch (e) { /* ignore */ }
-  }
-
-  /* ---------------- 底层请求 ---------------- */
-  async function request(path, method, body) {
-    const headers = { 'Content-Type': 'application/json' };
-    if (cache.token) headers['Authorization'] = 'Bearer ' + cache.token;
-    let resp;
-    try {
-      resp = await fetch(WM_API_BASE + path, {
-        method: method || 'GET',
-        headers,
-        body: body != null ? JSON.stringify(body) : undefined
-      });
-    } catch (e) {
-      cache.online = false;
-      const err = new Error('无法连接后端服务，请先启动 node backend/server/server.js。若以 file:// 打开，请改用 http:// 访问。');
-      err.notOnline = true;
-      throw err;
-    }
-    if (resp.status === 204) return null;
-    const data = await resp.json().catch(() => ({}));
-    if (!resp.ok) {
-      const err = new Error(data.error || ('请求失败 ' + resp.status));
-      err.status = resp.status;
-      err.notOnline = false;
-      throw err;
-    }
-    cache.online = true;
-    return data;
+  // ------- 用户 -------
+  function seedUsers() {
+    const list = read(USERS_KEY, []);
+    if (list.length) return;
+    list.push(
+      { id: uid(), username: 'admin', password: 'admin123', name: '系统管理员', role: 'admin', phone: '', createdAt: Date.now() },
+      { id: uid(), username: 'shenheyuan', password: 'sh123', name: '张审核员', role: 'auditor', phone: '', createdAt: Date.now() },
+      { id: uid(), username: 'shigongyuan', password: 'sg123', name: '李施工员', role: 'builder', phone: '13800000000', createdAt: Date.now() }
+    );
+    write(USERS_KEY, list);
   }
 
-  /* ---------------- 初始化 ---------------- */
-  async function init() {
-    loadToken();
-    // 1) 用 token 恢复当前用户（无效则清 token）
-    if (cache.token) {
-      try {
-        const me = await request('/auth/me');
-        cache.currentUser = (me && me.user) || null;
-      } catch (e) {
-        if (e.notOnline) { cache.online = false; throw e; }
-        saveToken(null);
-        cache.currentUser = null;
-      }
-    }
-    // 2) 拉取全量数据（仅登录后）
-    if (cache.currentUser) {
-      try {
-        const [u, i, c, h] = await Promise.all([
-          request('/users'),
-          request('/issues'),
-          request('/ai/config'),
-          request('/chat/history')
-        ]);
-        cache.users = (u && u.users) || [];
-        cache.issues = (i && i.issues) || [];
-        cache.chatHistory = (h && h.history) || [];
-        cache.aiConfig = c ? { baseUrl: c.baseUrl, model: c.model, apiKey: '', thinking: c.thinking } : null;
-      } catch (e) {
-        if (e.notOnline) { cache.online = false; throw e; }
-        cache.users = cache.users || [];
-        cache.issues = cache.issues || [];
-      }
-    }
-    return cache.currentUser;
-  }
+  const getUserByLogin = (username, password) =>
+    read(USERS_KEY, []).find(u => u.username === String(username || '').trim() && u.password === String(password || ''));
 
-  /* ---------------- 认证 ---------------- */
-  async function login(username, password) {
-    const r = await request('/auth/login', 'POST', { username, password });
-    cache.token = r.token;
-    saveToken(r.token);
-    cache.currentUser = r.user;
-    // 登录后拉取全量数据
-    await init();
-    return r.user;
-  }
-  async function logout() {
-    try { await request('/auth/logout', 'POST'); } catch (e) { /* ignore */ }
-    saveToken(null);
-    cache.currentUser = null;
-    cache.users = [];
-    cache.issues = [];
-    cache.chatHistory = [];
-  }
-  function getSession() { return cache.token; }
-  function setSession(token) { if (token) saveToken(token); else logout(); }
+  const listUsers = () => read(USERS_KEY, []);
 
-  /* ---------------- 用户（同步缓存 + 异步持久化） ---------------- */
-  function listUsers() { return cache.users; }
-  function getUserByLogin(username, password) {
-    return cache.users.find(u => u.username === String(username || '').trim() && u.password === password) || null;
-  }
-  function findUserById(id) { return cache.users.find(u => u.id === id) || null; }
-  function findByUsername(username) {
-    return cache.users.find(u => u.username === String(username || '').trim()) || null;
-  }
   function saveUser(user) {
-    const i = cache.users.findIndex(u => u.id === user.id);
-    if (i >= 0) cache.users[i] = user; else cache.users.push(user);
-    persistUser(user);
+    const list = read(USERS_KEY, []);
+    const i = list.findIndex(u => u.id === user.id);
+    if (i >= 0) list[i] = user; else list.push(user);
+    write(USERS_KEY, list);
     return user;
-  }
-  function createUser(user) {
-    if (!user.id) user.id = uid();
-    if (!user.createdAt) user.createdAt = Date.now();
-    cache.users.push(user);
-    request('/users', 'POST', user).catch(() => {});
-    return user;
-  }
-  function deleteUser(id) {
-    cache.users = cache.users.filter(u => u.id !== id);
-    request('/users/' + encodeURIComponent(id), 'DELETE').catch(() => {});
-  }
-  function persistUser(user) {
-    if (!user.id) return;
-    const payload = { username: user.username, name: user.name, password: user.password, role: user.role, phone: user.phone };
-    request('/users', 'PUT', Object.assign({ id: user.id }, payload)).catch(() => {});
   }
 
-  /* ---------------- 问题台账 ---------------- */
-  function listIssues() { return cache.issues; }
-  function getIssue(id) { return cache.issues.find(i => i.id === id) || null; }
+  const createUser = (user) => { user.id = uid(); user.createdAt = Date.now(); saveUser(user); return user; };
+  const deleteUser = (id) => write(USERS_KEY, read(USERS_KEY, []).filter(u => u.id !== id));
+  const findByUsername = (username) => read(USERS_KEY, []).find(u => u.username === String(username || '').trim());
+  const findUserById = (id) => read(USERS_KEY, []).find(u => u.id === id) || null;
+
+  // ------- 问题台账 -------
+  const listIssues = () => read(ISSUES_KEY, []);
+
   function saveIssue(issue) {
     if (!issue.updatedAt) issue.updatedAt = Date.now();
-    const i = cache.issues.findIndex(x => x.id === issue.id);
-    const existed = i >= 0;
-    if (existed) cache.issues[i] = issue; else cache.issues.push(issue);
-    if (existed) {
-      // 更新已有台账
-      const payload = {
-        title: issue.title, site: issue.site, note: issue.note,
-        risk: issue.risk, status: issue.status,
-        risks: issue.risks, summary: issue.summary, photos: issue.photos,
-        history: issue.history
-      };
-      request('/issues/' + encodeURIComponent(issue.id), 'PUT', payload).catch(() => {});
-    } else {
-      // 新建问题
-      request('/issues', 'POST', issue).catch(() => {});
-    }
+    const list = read(ISSUES_KEY, []);
+    const i = list.findIndex(x => x.id === issue.id);
+    if (i >= 0) list[i] = issue; else list.push(issue);
+    write(ISSUES_KEY, list);
     return issue;
   }
-  function deleteIssue(id) {
-    cache.issues = cache.issues.filter(x => x.id !== id);
-    request('/issues/' + encodeURIComponent(id), 'DELETE').catch(() => {});
-  }
-  /* 状态流转（确认/开始整改/标记整改/销号）：
-     在缓存中同步推进（审核确认、标记整改等需记录操作人与时间），并异步调用后端 */
+  const getIssue = (id) => read(ISSUES_KEY, []).find(x => x.id === id);
+  const deleteIssue = (id) => write(ISSUES_KEY, read(ISSUES_KEY, []).filter(x => x.id !== id));
+
+  /* 状态流转（审核确认 / 开始整改 / 标记整改 / 销号）：本地推进并记录审计 history */
+  const AUDIT_MSG = {
+    confirmed: '审核员确认问题属实，纳入整改台账',
+    rectifying: '已下达整改任务，进入整改中',
+    rectified: '施工单位报告已完成整改',
+    closed: '现场复核通过，完成销号'
+  };
+  const AUDIT_TITLE = {
+    confirmed: '审核确认',
+    rectifying: '开始整改',
+    rectified: '已整改',
+    closed: '销号'
+  };
   function transitionIssue(id, status) {
     const i = getIssue(id);
     if (!i) return;
+    const me = getSession();
     i.status = status;
     i.updatedAt = Date.now();
     if (status === 'rectified') i.rectifiedAt = Date.now();
-    if (status === 'confirmed') i.auditorId = cache.currentUser ? cache.currentUser.id : i.auditorId;
+    if (status === 'confirmed') i.auditorId = me ? me.id : i.auditorId;
     i.history = i.history || [];
-    const auditMsg = {
-      confirmed: '审核员确认问题属实，纳入整改台账',
-      rectifying: '已下达整改任务，进入整改中',
-      rectified: '施工单位报告已完成整改',
-      closed: '现场复核通过，完成销号'
-    };
-    const auditTitle = {
-      confirmed: '审核确认',
-      rectifying: '开始整改',
-      rectified: '已整改',
-      closed: '销号'
-    };
-    i.history.push({ t: auditTitle[status] || status, by: cache.currentUser ? cache.currentUser.id : '', at: Date.now(), content: auditMsg[status] || '' });
-    request('/issues/' + encodeURIComponent(id) + '/status', 'PUT', { status }).catch(() => {});
+    i.history.push({ t: AUDIT_TITLE[status] || status, by: me ? me.id : '', at: Date.now(), content: AUDIT_MSG[status] || '' });
+    saveIssue(i);
   }
 
-  /* ---------------- AI 配置 ---------------- */
-  function getAIConfig() {
-    return cache.aiConfig || { baseUrl: 'https://api.deepseek.com', model: 'deepseek-flash', apiKey: '', thinking: 'disabled' };
-  }
-  function setAIConfig(cfg) {
-    cache.aiConfig = Object.assign({}, cache.aiConfig || {}, cfg);
-    request('/ai/config', 'PUT', cfg).catch(() => {});
-    return cache.aiConfig;
-  }
+  // ------- AI 配置（默认接入 DeepSeek 多模态，密钥由管理员在「AI 接口」页面填写） -------
+  const getAIConfig = () => read(AI_KEY, { baseUrl: 'https://api.deepseek.com', model: 'deepseek-flash', apiKey: '', thinking: 'disabled' });
+  const setAIConfig = (cfg) => { write(AI_KEY, cfg); return cfg; };
 
-  /* ---------------- AI 助手聊天历史 ---------------- */
-  const CHAT_MAX = 60;
-  function getChatHistory() { return cache.chatHistory; }
+  // ------- AI 助手聊天历史 -------
+  const getChatHistory = () => read(CHAT_KEY, []);
   function pushChatMessage(msg) {
-    cache.chatHistory.push({ role: msg.role, content: String(msg.content || ''), at: msg.at || Date.now() });
-    if (cache.chatHistory.length > CHAT_MAX) cache.chatHistory.splice(0, cache.chatHistory.length - CHAT_MAX);
-    request('/chat/history', 'POST', { role: msg.role, content: String(msg.content || ''), at: msg.at || Date.now() }).catch(() => {});
-    return cache.chatHistory;
+    const list = read(CHAT_KEY, []);
+    list.push({ role: msg.role, content: String(msg.content || ''), at: msg.at || Date.now() });
+    if (list.length > CHAT_MAX) list.splice(0, list.length - CHAT_MAX);
+    write(CHAT_KEY, list);
+    return list;
   }
-  function clearChatHistory() {
-    cache.chatHistory = [];
-    request('/chat/history', 'DELETE').catch(() => {});
+  const clearChatHistory = () => { if (hasLS()) localStorage.removeItem(CHAT_KEY); };
+
+  // ------- 会话 -------
+  const getSession = () => read(SESSION_KEY, null);
+  const setSession = (s) => s ? write(SESSION_KEY, s) : (hasLS() && localStorage.removeItem(SESSION_KEY));
+
+  /* ------- 兼容 app.js 的异步初始化与登录（同步实现，返回 Promise） ------- */
+  function init() { seedUsers(); return Promise.resolve(getSession() || null); }
+  function login(username, password) {
+    return new Promise((resolve, reject) => {
+      seedUsers();
+      const user = getUserByLogin(username, password);
+      if (!user) return reject(new Error('账号或密码错误'));
+      setSession({ id: user.id });
+      resolve(user);
+    });
   }
+  function logout() { setSession(null); return Promise.resolve(); }
 
   return {
-    uid,
-    init, login, logout,
-    getSession, setSession,
+    uid, init, login, logout,
     getUserByLogin, listUsers, saveUser, createUser, deleteUser, findByUsername, findUserById,
     listIssues, saveIssue, getIssue, deleteIssue, transitionIssue,
-    getAIConfig, setAIConfig,
+    getAIConfig, setAIConfig, getSession, setSession,
     getChatHistory, pushChatMessage, clearChatHistory,
-    get currentUser() { return cache.currentUser; }
+    seedUsers
   };
 })();
 
-/* 角色元信息（与原版一致） */
+/* 角色元信息 */
 const ROLES = {
   admin:   { label: '管理员', badge: 'admin' },
   auditor: { label: '审核员', badge: 'confirmed' },
