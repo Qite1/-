@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>水利工程质量安全合规管理助手 — 湖北建投水利水电工程有限公司</title>
+  <link rel="stylesheet" href="frontend/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>" />
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-logo">🌊</div>
+        <div class="brand-text">
+          <h1>水利工程质量安全合规管理助手</h1>
+          <p>Quality · Safety · Compliance</p>
+        </div>
+      </div>
+      <nav class="main-nav" id="mainNav"></nav>
+      <div class="user-box" id="userBox"></div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="container" id="app"></main>
+
+  <!-- 底部 -->
+  <footer class="footer">
+    <p>湖北建投水利水电工程有限公司 · 工程质量安全合规管理平台</p>
+    <p>本系统 AI 隐患识别为辅助工具，最终以专业技术人员现场核实为准</p>
+  </footer>
+
+  <!-- 通用弹窗 -->
+  <div class="modal-mask" id="modalMask" style="display:none">
+    <div class="modal" id="modalBox"></div>
+  </div>
+
+  <!-- 提示 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="frontend/js/store.js"></script>
+  <script src="frontend/js/regulations.js"></script>
+  <script src="frontend/js/ai.js"></script>
+  <script src="frontend/js/md.js"></script>
+  <script src="frontend/js/app.js"></script>
+</body>
+</html>

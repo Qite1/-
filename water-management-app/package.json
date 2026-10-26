@@ -1,0 +1,24 @@
+{
+  "name": "water-quality-safety",
+  "version": "1.0.0",
+  "description": "水利工程质量安全合规管理助手 —— 面向水利施工企业的质量安全合规管理平台（Web 前端 + Node 后端，零依赖）",
+  "main": "backend/server/server.js",
+  "scripts": {
+    "start": "node backend/server/server.js",
+    "server": "node backend/server/server.js",
+    "test:api": "node backend/server/test-api.js"
+  },
+  "keywords": [
+    "水利工程",
+    "质量安全",
+    "合规管理",
+    "隐患整改",
+    "AI 识别",
+    "DeepSeek"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT",
+  "private": true
+}
