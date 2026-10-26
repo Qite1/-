@@ -1,0 +1,16 @@
+{
+  "name": "water-management-app",
+  "version": "1.1.0",
+  "description": "水利工程质量安全合规管理助手（Web + Node 后端，零依赖）",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "server": "node server/server.js",
+    "test:api": "node server/test-api.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}
